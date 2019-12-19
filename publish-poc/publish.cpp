@@ -10,18 +10,15 @@ using namespace std::chrono;
 int main(int argc, char** argv) {
 	std::string url("amqp://localhost:61616");
 	std::string address("topic.valorEconomico");
+	std::string user("admin");
+	std::string password("admin");
+	int desired = 7395;
+	int received = 0;
 
+	//Criado deamon para envio constante de dados simulando um motor de envio
+	//A cada iteracao realizamos um thread sleep de 1 segundo para envio de um novo lote de dados
 	while (true) {
-	   
-		auto start = std::chrono::system_clock::now();
-		auto end = std::chrono::system_clock::now();
-
-		std::chrono::duration<double> elapsed_seconds = end - start;
-		std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-
-		std::string messageBody(std::to_string(end_time));
-
-		publish pub(url, address, messageBody);
+		publish pub(url, address, user, password, desired, received);
 
 		proton::container cont{ pub };
 
@@ -33,7 +30,7 @@ int main(int argc, char** argv) {
 			return 1;
 		}
 
-		//std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 
 	return 0;
