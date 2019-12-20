@@ -72,7 +72,7 @@ public:
 	}
 
 	void on_sendable(proton::sender& snd) override {
-		proton::message msg{ getMessage() };
+		proton::message msg{getMessage()};
 		snd.send(msg);
 
 		std::cout << "SEND: Sent message '" << msg.body() << "'\n";
@@ -94,7 +94,10 @@ public:
 		std::chrono::duration<double> elapsed_seconds = end - start;
 		std::time_t end_time = std::chrono::system_clock::to_time_t(end);
 
-		return std::to_string(end_time);
+		std::string timeFormat = std::to_string(end_time);
+		timeFormat.insert(10, 235, '0');
+
+		return timeFormat;
 	}
 };
 
